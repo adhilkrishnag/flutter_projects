@@ -1,0 +1,21 @@
+name: bmi_calculator
+description: A simple Flutter app to calculate Body Mass Index (BMI).
+version: 1.0.0+1
+publish_to: 'none' # Prevents accidental publishing to pub.dev
+
+environment:
+  sdk: ^3.7.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.8
+  font_awesome_flutter: ^10.8.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^5.0.0
+
+flutter:
+  uses-material-design: true
