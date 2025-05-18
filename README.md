@@ -1,2 +1,9 @@
-# flutter_projects
-This repository is a curated collection of Flutter mini-projects, built for learning, experimentation, and showcasing Flutter's versatility. Each project contains its own source code and a deployable web build.
+# 📱 Flutter Projects
+
+Welcome to my **Flutter Projects Repository** — a curated collection of mini Flutter applications built for learning, experimentation, and portfolio showcasing. Each project contains its own **source code** and **web build** for deployment.
+
+---
+
+## 🧭 Repository Structure
+
+Each project in this repository follows the same structure:
