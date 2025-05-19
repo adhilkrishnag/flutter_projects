@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../auth/bloc/auth_bloc.dart';
 
-// Login screen for sign-in and sign-up
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
 
@@ -62,11 +61,13 @@ class _LoginScreenState extends State<LoginScreen> {
                           if (email.isNotEmpty && password.isNotEmpty) {
                             if (isSignUp) {
                               context.read<AuthBloc>().add(
-                                    AuthSignUpRequested(email, password),
+                                    AuthSignUp(
+                                        email: email, password: password),
                                   );
                             } else {
                               context.read<AuthBloc>().add(
-                                    AuthSignInRequested(email, password),
+                                    AuthSignIn(
+                                        email: email, password: password),
                                   );
                             }
                           } else {

@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../chat/bloc/chat_bloc.dart';
 
-// Chat screen for sending and receiving messages
 class ChatScreen extends StatefulWidget {
   final dynamic user; // Using dynamic to avoid Firebase User dependency
 
@@ -19,7 +18,6 @@ class _ChatScreenState extends State<ChatScreen> {
   @override
   void initState() {
     super.initState();
-    // Load messages when the screen initializes
     context.read<ChatBloc>().add(ChatLoadMessages());
   }
 
@@ -38,7 +36,8 @@ class _ChatScreenState extends State<ChatScreen> {
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () {
-              context.read<AuthBloc>().add(AuthSignOutRequested());
+              // Fixed: Use AuthSignOut instead of AuthSignOutRequested
+              context.read<AuthBloc>().add(AuthSignOut());
             },
           ),
         ],
