@@ -14,12 +14,23 @@ class AuthWrapper extends StatelessWidget {
     return BlocBuilder<AuthBloc, AuthState>(
       builder: (context, state) {
         if (state is AuthAuthenticated) {
-          return BlocProvider<ChatBloc>(
-            create: (context) => ChatBloc(
-              chatRepository: RepositoryProvider.of<ChatRepository>(context),
-            )..add(ChatLoadMessages()),
-            child: ChatScreen(user: state.user),
-          );
+          try {
+            return BlocProvider<ChatBloc>(
+              create: (context) {
+                final chatRepository =
+                    RepositoryProvider.of<ChatRepository>(context);
+
+                return ChatBloc(chatRepository: chatRepository)
+                  ..add(ChatLoadMessages());
+              },
+              child: ChatScreen(user: state.user),
+            );
+          } catch (e) {
+            debugPrint('ChatBloc creation failed: $e');
+            return const Scaffold(
+              body: Center(child: Text('Failed to load chat: ChatBloc error')),
+            );
+          }
         } else {
           return const LoginScreen();
         }

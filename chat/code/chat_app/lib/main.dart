@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'auth/bloc/auth_bloc.dart';
 import 'auth/auth_repository.dart';
+import 'chat/chat_repository.dart';
 import 'screens/auth_wrapper.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -34,7 +35,6 @@ void main() async {
     debugPrint('Firebase initialized successfully');
   } catch (e) {
     debugPrint('Firebase initialization failed: $e');
-    // Optionally show an error UI
     runApp(MaterialApp(
         home: Scaffold(
             body: Center(child: Text('Failed to initialize app: $e')))));
@@ -46,10 +46,21 @@ void main() async {
 
 class ChatApp extends StatelessWidget {
   const ChatApp({super.key});
+
   @override
   Widget build(BuildContext context) {
-    return RepositoryProvider(
-      create: (context) => AuthRepository(),
+    return MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider(create: (context) => AuthRepository()),
+        RepositoryProvider(create: (context) {
+          try {
+            return ChatRepository();
+          } catch (e) {
+            debugPrint('ChatRepository initialization failed: $e');
+            rethrow;
+          }
+        }),
+      ],
       child: BlocProvider(
         create: (context) => AuthBloc(
           authRepository: RepositoryProvider.of<AuthRepository>(context),
@@ -59,7 +70,28 @@ class ChatApp extends StatelessWidget {
           theme: ThemeData(
             primarySwatch: Colors.blue,
             visualDensity: VisualDensity.adaptivePlatformDensity,
+            brightness: Brightness.light,
+            scaffoldBackgroundColor: Colors.grey[100],
+            cardTheme: CardTheme(
+              elevation: 8.0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16.0),
+              ),
+            ),
           ),
+          darkTheme: ThemeData(
+            primarySwatch: Colors.blue,
+            visualDensity: VisualDensity.adaptivePlatformDensity,
+            brightness: Brightness.dark,
+            scaffoldBackgroundColor: Colors.grey[900],
+            cardTheme: CardTheme(
+              elevation: 8.0,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(16.0),
+              ),
+            ),
+          ),
+          themeMode: ThemeMode.system, // Auto-switch based on system
           home: const AuthWrapper(),
         ),
       ),

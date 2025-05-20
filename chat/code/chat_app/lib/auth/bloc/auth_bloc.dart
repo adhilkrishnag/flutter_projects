@@ -1,4 +1,4 @@
-import 'package:bloc/bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import '../auth_repository.dart';
@@ -80,6 +80,7 @@ class AuthBloc extends Bloc<AuthEvent, AuthState> {
     });
 
     @override
+    // ignore: unused_element
     Future<void> close() {
       _authSubscription?.cancel();
       return super.close();

@@ -4,7 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../chat/bloc/chat_bloc.dart';
 
 class ChatScreen extends StatefulWidget {
-  final dynamic user; // Using dynamic to avoid Firebase User dependency
+  final dynamic user;
 
   const ChatScreen({super.key, required this.user});
 
@@ -14,12 +14,6 @@ class ChatScreen extends StatefulWidget {
 
 class _ChatScreenState extends State<ChatScreen> {
   final _messageController = TextEditingController();
-
-  @override
-  void initState() {
-    super.initState();
-    context.read<ChatBloc>().add(ChatLoadMessages());
-  }
 
   @override
   void dispose() {
@@ -36,7 +30,6 @@ class _ChatScreenState extends State<ChatScreen> {
           IconButton(
             icon: const Icon(Icons.logout),
             onPressed: () {
-              // Fixed: Use AuthSignOut instead of AuthSignOutRequested
               context.read<AuthBloc>().add(AuthSignOut());
             },
           ),
@@ -45,7 +38,14 @@ class _ChatScreenState extends State<ChatScreen> {
       body: Column(
         children: [
           Expanded(
-            child: BlocBuilder<ChatBloc, ChatState>(
+            child: BlocConsumer<ChatBloc, ChatState>(
+              listener: (context, state) {
+                if (state is ChatError) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Error: ${state.message}')),
+                  );
+                }
+              },
               builder: (context, state) {
                 if (state is ChatLoading) {
                   return const Center(child: CircularProgressIndicator());
