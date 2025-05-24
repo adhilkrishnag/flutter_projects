@@ -1,36 +1,54 @@
+# Project metadata
 name: chat_app
-description: A chat application built with Flutter, Firebase, and BLoC pattern for real-time messaging and secure authentication.
+# Brief description of the project
+description: A Flutter-based chat application using Firebase for real-time messaging, Firebase Authentication for secure user management, and BLoC pattern with feature-first architecture for state management and maintainability.
+# Version of the app
 version: 1.0.0
+
+# Environment constraints
 environment:
-  # Specify the required SDK versions
+  # Specifies the Dart SDK version range supported by the project
   sdk: '>=3.0.0 <4.0.0'
 
+# Runtime dependencies required for the app
 dependencies:
   flutter:
+    # Core Flutter SDK for building the app
     sdk: flutter
-  # Firebase core for initializing Firebase services
   firebase_core: ^3.6.0
-  # Firebase Authentication for user sign-in and sign-up
+    # Firebase Core for initializing Firebase services
   firebase_auth: ^5.3.1
-  # Firestore for real-time database and messaging
+    # Firebase Authentication for user sign-in, sign-up, and session management
   cloud_firestore: ^5.4.4
-  # Secure storage for storing user tokens (not used on web)
+    # Cloud Firestore for real-time database to store and sync chat messages
   flutter_secure_storage: ^9.2.2
-  # BLoC for state management
+    # Flutter Secure Storage for securely storing user tokens (not used on web platforms)
   flutter_bloc: ^9.0.1
-  # Equatable for comparing objects in BLoC states/events
+    # Flutter BLoC for state management, handling authentication and chat logic
   equatable: ^2.0.5
-  # Environment variables for secure configuration
+    # Equatable for simplifying object comparison in BLoC states and events
   flutter_dotenv: ^5.1.0
+    # Flutter Dotenv for loading environment variables from .env file (e.g., Firebase API keys)
+  flex_color_scheme: ^8.2.0
+    # Flex Color Scheme for advanced theming, used for Dribbble-inspired UI with light/dark modes
+  get_it: ^7.7.0
+    # GetIt for dependency injection to manage repository and data source instances
+  dartz: ^0.10.1
+    # Dartz for functional programming utilities (e.g., Either for error handling)
 
+# Development dependencies used for testing and linting
 dev_dependencies:
   flutter_test:
+    # Flutter testing framework for unit and widget tests
     sdk: flutter
-  # Linting rules for code quality
   flutter_lints: ^4.0.0
+    # Flutter Lints for enforcing code quality and best practices
 
+# Flutter-specific configurations
 flutter:
-  # Enable Material Design
+  # Enables Material Design components for consistent UI
   uses-material-design: true
+  # Assets included in the app, such as configuration files
   assets:
+    # Environment file for Firebase configuration
     - .env

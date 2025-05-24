@@ -1,12 +1,12 @@
+import 'package:chat_app/src/feature/auth/bloc/auth_bloc.dart';
+import 'package:chat_app/src/feature/auth/presentation/auth_wrapper.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'auth/bloc/auth_bloc.dart';
-import 'auth/auth_repository.dart';
-import 'chat/chat_repository.dart';
-import 'screens/auth_wrapper.dart';
+import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'src/core/di/injection.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -36,10 +36,15 @@ void main() async {
   } catch (e) {
     debugPrint('Firebase initialization failed: $e');
     runApp(MaterialApp(
-        home: Scaffold(
-            body: Center(child: Text('Failed to initialize app: $e')))));
+      home: Scaffold(
+        body: Center(child: Text('Failed to initialize app: $e')),
+      ),
+    ));
     return;
   }
+
+  // Initialize dependency injection
+  await configureDependencies();
 
   runApp(const ChatApp());
 }
@@ -49,51 +54,26 @@ class ChatApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiRepositoryProvider(
-      providers: [
-        RepositoryProvider(create: (context) => AuthRepository()),
-        RepositoryProvider(create: (context) {
-          try {
-            return ChatRepository();
-          } catch (e) {
-            debugPrint('ChatRepository initialization failed: $e');
-            rethrow;
-          }
-        }),
-      ],
-      child: BlocProvider(
-        create: (context) => AuthBloc(
-          authRepository: RepositoryProvider.of<AuthRepository>(context),
-        )..add(AuthStarted()),
-        child: MaterialApp(
-          title: 'Chat App',
-          theme: ThemeData(
-            primarySwatch: Colors.blue,
-            visualDensity: VisualDensity.adaptivePlatformDensity,
-            brightness: Brightness.light,
-            scaffoldBackgroundColor: Colors.grey[100],
-            cardTheme: CardTheme(
-              elevation: 8.0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16.0),
-              ),
-            ),
-          ),
-          darkTheme: ThemeData(
-            primarySwatch: Colors.blue,
-            visualDensity: VisualDensity.adaptivePlatformDensity,
-            brightness: Brightness.dark,
-            scaffoldBackgroundColor: Colors.grey[900],
-            cardTheme: CardTheme(
-              elevation: 8.0,
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(16.0),
-              ),
-            ),
-          ),
-          themeMode: ThemeMode.system, // Auto-switch based on system
-          home: const AuthWrapper(),
-        ),
+    return BlocProvider(
+      create: (context) => getIt<AuthBloc>()..add(const AuthStarted()),
+      child: MaterialApp(
+        title: 'Chat App',
+        theme: FlexColorScheme.light(
+          scheme: FlexScheme.green,
+          surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
+          blendLevel: 20,
+          appBarOpacity: 0.95,
+          visualDensity: FlexColorScheme.comfortablePlatformDensity,
+        ).toTheme,
+        darkTheme: FlexColorScheme.dark(
+          scheme: FlexScheme.green,
+          surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
+          blendLevel: 15,
+          appBarOpacity: 0.90,
+          visualDensity: FlexColorScheme.comfortablePlatformDensity,
+        ).toTheme,
+        themeMode: ThemeMode.system,
+        home: const AuthWrapper(),
       ),
     );
   }
