@@ -23,6 +23,8 @@ class _LoginScreenState extends State<LoginScreen>
   late Animation<Offset> _slideAnimation;
   late Animation<Color?> _backgroundColorAnimation;
   late Animation<Color?> _accentColorAnimation;
+  late Animation<Color?> _brandingGradientStartAnimation;
+  late Animation<Color?> _brandingGradientEndAnimation;
   late Animation<double> _fadeAnimation;
   late Animation<double> _scaleAnimation;
 
@@ -91,6 +93,27 @@ class _LoginScreenState extends State<LoginScreen>
     ));
 
     _accentColorAnimation = ColorTween(
+      begin: _isLoginMode ? colorScheme.primary : colorScheme.secondary,
+      end: _isLoginMode ? colorScheme.secondary : colorScheme.primary,
+    ).animate(CurvedAnimation(
+      parent: _transitionController,
+      curve: Curves.easeInOut,
+    ));
+
+    // New branding section gradient animations
+    _brandingGradientStartAnimation = ColorTween(
+      begin: _isLoginMode 
+          ? colorScheme.primary.withValues(alpha: 0.8)
+          : colorScheme.secondary.withValues(alpha: 0.8),
+      end: _isLoginMode 
+          ? colorScheme.secondary.withValues(alpha: 0.8)
+          : colorScheme.primary.withValues(alpha: 0.8),
+    ).animate(CurvedAnimation(
+      parent: _transitionController,
+      curve: Curves.easeInOut,
+    ));
+
+    _brandingGradientEndAnimation = ColorTween(
       begin: _isLoginMode ? colorScheme.primary : colorScheme.secondary,
       end: _isLoginMode ? colorScheme.secondary : colorScheme.primary,
     ).animate(CurvedAnimation(
@@ -177,21 +200,28 @@ class _LoginScreenState extends State<LoginScreen>
   Widget _buildDesktopLayout(BuildContext context, ColorScheme colorScheme) {
     return Row(
       children: [
-        // Left side - Image/Branding
+        // Left side - Image/Branding with animated colors
         Expanded(
           flex: 6,
-          child: Container(
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  colorScheme.primary.withValues(alpha: 0.8),
-                  colorScheme.primary,
-                ],
-              ),
-            ),
-            child: _buildBrandingSection(context, colorScheme),
+          child: AnimatedBuilder(
+            animation: _transitionController,
+            builder: (context, child) {
+              return Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      _brandingGradientStartAnimation.value ??
+                          colorScheme.primary.withValues(alpha: 0.8),
+                      _brandingGradientEndAnimation.value ??
+                          colorScheme.primary,
+                    ],
+                  ),
+                ),
+                child: _buildBrandingSection(context, colorScheme),
+              );
+            },
           ),
         ),
         // Right side - Form
@@ -214,22 +244,29 @@ class _LoginScreenState extends State<LoginScreen>
   Widget _buildTabletLayout(BuildContext context, ColorScheme colorScheme) {
     return Column(
       children: [
-        // Top - Branding (smaller)
+        // Top - Branding (smaller) with animated colors
         Expanded(
           flex: 3,
-          child: Container(
-            width: double.infinity,
-            decoration: BoxDecoration(
-              gradient: LinearGradient(
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter,
-                colors: [
-                  colorScheme.primary.withOpacity(0.8),
-                  colorScheme.primary,
-                ],
-              ),
-            ),
-            child: _buildBrandingSection(context, colorScheme, isCompact: true),
+          child: AnimatedBuilder(
+            animation: _transitionController,
+            builder: (context, child) {
+              return Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                    colors: [
+                      _brandingGradientStartAnimation.value ??
+                          colorScheme.primary.withValues(alpha: 0.8),
+                      _brandingGradientEndAnimation.value ??
+                          colorScheme.primary,
+                    ],
+                  ),
+                ),
+                child: _buildBrandingSection(context, colorScheme, isCompact: true),
+              );
+            },
           ),
         ),
         // Bottom - Form
@@ -254,26 +291,32 @@ class _LoginScreenState extends State<LoginScreen>
       child: SingleChildScrollView(
         child: Column(
           children: [
-            // Top branding section
-            Container(
-              height: 200,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                gradient: LinearGradient(
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                  colors: [
-                    colorScheme.primary.withValues(alpha: 0.8),
-                    colorScheme.primary,
-                  ],
-                ),
-                borderRadius: const BorderRadius.only(
-                  bottomLeft: Radius.circular(32),
-                  bottomRight: Radius.circular(32),
-                ),
-              ),
-              child:
-                  _buildBrandingSection(context, colorScheme, isCompact: true),
+            // Top branding section with animated colors
+            AnimatedBuilder(
+              animation: _transitionController,
+              builder: (context, child) {
+                return Container(
+                  height: 200,
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        _brandingGradientStartAnimation.value ??
+                            colorScheme.primary.withValues(alpha: 0.8),
+                        _brandingGradientEndAnimation.value ??
+                            colorScheme.primary,
+                      ],
+                    ),
+                    borderRadius: const BorderRadius.only(
+                      bottomLeft: Radius.circular(32),
+                      bottomRight: Radius.circular(32),
+                    ),
+                  ),
+                  child: _buildBrandingSection(context, colorScheme, isCompact: true),
+                );
+              },
             ),
             // Form section
             Padding(

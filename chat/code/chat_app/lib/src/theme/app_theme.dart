@@ -6,7 +6,7 @@ abstract final class AppTheme {
   // The FlexColorScheme defined light mode ThemeData.
   static ThemeData light = FlexThemeData.light(
     // Using FlexColorScheme built-in FlexScheme enum based colors
-    scheme: FlexScheme.wasabi,
+    scheme: FlexScheme.shadViolet,
     // Surface color adjustments.
     surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
     blendLevel: 1,
