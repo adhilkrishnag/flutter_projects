@@ -1,9 +1,9 @@
 import 'package:chat_app/src/feature/auth/bloc/auth_bloc.dart';
 import 'package:chat_app/src/feature/auth/presentation/auth_wrapper.dart';
+import 'package:chat_app/src/theme/app_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'src/core/di/injection.dart';
@@ -58,21 +58,10 @@ class ChatApp extends StatelessWidget {
       create: (context) => getIt<AuthBloc>()..add(const AuthStarted()),
       child: MaterialApp(
         title: 'Chat App',
-        theme: FlexColorScheme.light(
-          scheme: FlexScheme.green,
-          surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
-          blendLevel: 20,
-          appBarOpacity: 0.95,
-          visualDensity: FlexColorScheme.comfortablePlatformDensity,
-        ).toTheme,
-        darkTheme: FlexColorScheme.dark(
-          scheme: FlexScheme.green,
-          surfaceMode: FlexSurfaceMode.highScaffoldLowSurface,
-          blendLevel: 15,
-          appBarOpacity: 0.90,
-          visualDensity: FlexColorScheme.comfortablePlatformDensity,
-        ).toTheme,
-        themeMode: ThemeMode.system,
+        theme: AppTheme.light,
+        darkTheme: AppTheme.dark,
+        debugShowCheckedModeBanner: false,
+        themeMode: ThemeMode.light,
         home: const AuthWrapper(),
       ),
     );
